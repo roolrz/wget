@@ -335,6 +335,10 @@ ssl_init (void)
     }
 
   SSL_CTX_set_default_verify_paths (ssl_ctx);
+#ifdef __MACH__
+  /* Load Apple Keychain Access ca-certificate in macOS, hotfix for macOS platform */
+  SSL_CTX_load_verify_locations (ssl_ctx, "/private/etc/ssl/cert.pem", NULL);
+#endif
   SSL_CTX_load_verify_locations (ssl_ctx, opt.ca_cert, opt.ca_directory);
 
 #ifdef X509_V_FLAG_PARTIAL_CHAIN
